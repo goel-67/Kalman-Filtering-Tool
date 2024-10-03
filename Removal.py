@@ -63,7 +63,6 @@ def run_tests():
     # V = np.array([16, 1, 36, 49])
     V = np.array([16.0, 1.0, 36.0, 49.0, 4.0, 25.0])
     # V = np.array([np.inf, np.inf, 70, 49.271, 0, 0])
-    V = V.reshape(-1, 1)
 
     # Matrix B Test cases 1 to 5
     # B = np.array([[0, 0.5, -1.75],
