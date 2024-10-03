@@ -19,7 +19,9 @@ def removal(B, V, n0, n1, n2):
 
     # If n2 > 1, reverse arcs from vector node x1 to the first n2-1 elements of vector node x2
     if n2 > 1:
-        B, V = reversal(B, V, n0, n1, n2 - 1, 0)
+        B, V = reversal(B, V, n0, n1, n2-1, 0)
+        print(B)
+        print(V)
 
     N = n0 + n1 + n2
 
@@ -35,6 +37,7 @@ def removal(B, V, n0, n1, n2):
             B[n0 + n1:N - 1, N - 1] += B[i - 1, N - 1] * B[n0 + n1:N - 1, i - 1]
 
         if V[i - 1] != 0:
+            # Check for infinity before updating V[N-1]
             if V[i - 1] != np.inf and V[N - 1] != np.inf:
                 V[N - 1] += B[i - 1, N - 1] * B[i - 1, N - 1] * V[i - 1]
             else:
@@ -46,3 +49,52 @@ def removal(B, V, n0, n1, n2):
     B[:, n0:n0 + n1] = 0
 
     return B, V
+
+
+# Test cases
+def run_tests():
+    n0 = 2
+    n1 = 2
+    n2 = 2
+    n3 = 0
+
+    # Vector V Test cases 1 to 4
+    # V = np.array([16, 1, 36])
+    # V = np.array([16, 1, 36, 49])
+    V = np.array([16.0, 1.0, 36.0, 49.0, 4.0, 25.0])
+    # V = np.array([np.inf, np.inf, 70, 49.271, 0, 0])
+    V = V.reshape(-1, 1)
+
+    # Matrix B Test cases 1 to 5
+    # B = np.array([[0, 0.5, -1.75],
+    #               [0, 0, 5],
+    #               [0, 0, 0]])
+    # B = np.array([[0, 0.5, -1.75, -0.125],
+    #               [0, 0, 5, 0.5],
+    #               [0, 0, 0, -0.5],
+    #               [0, 0, 0, 0]])
+    B = np.array([[0, 0.5, -1.75, -0.125, 1, 0.5],
+                  [0, 0, 5, 0.5, -1, 0.5],
+                  [0, 0, 0, -0.5, 1, -0.5],
+                  [0, 0, 0, 0, 1, 0.5],
+                  [0, 0, 0, 0, 0, 0.5],
+                  [0, 0, 0, 0, 0, 0]])
+    # B = np.array([[0, 0, 0, 0, 0, 0],
+    #               [0, 0, 0, 0, 0, 0],
+    #               [0, 0, 0, -0.4428571, 1.01826616, 0.18324152],
+    #               [0, 0, 0, 0, 1.00898811, 1.0266744],
+    #               [0, 0, 0, 0, 0, 0],
+    #               [0, 0, 0, 0, 0, 0]])
+
+    # Function call
+    B, V = removal(B, V, n0, n1, n2)
+
+    # Display the results
+    np.set_printoptions(precision=5)
+    print("Updated Matrix B:")
+    print(B)
+    print("Updated Vector V:")
+    print(V)
+
+if __name__ == "__main__":
+    run_tests()

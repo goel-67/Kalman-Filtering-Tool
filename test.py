@@ -1,5 +1,8 @@
 import numpy as np
-from Kalman import kalman  # Make sure to replace `your_module_name` with the actual name of your Python module
+from Kalman import (
+    kalman,
+)  # Make sure to replace `your_module_name` with the actual name of your Python module
+
 
 # Define the Kalman filter test function
 def test_kalman_filter():
@@ -7,16 +10,15 @@ def test_kalman_filter():
     k = 0
     Z = np.array([0.0101])  # Measurement values
     u = np.array([0.0101, 0.1188])  # Initial state vector (mean)
-    X = np.array([[0.01071225, 0.017495523],  # Covariance matrix (X)
-                  [0.017495523, 2.04175521]])
+    X = np.array(
+        [[0.01071225, 0.017495523], [0.017495523, 2.04175521]]  # Covariance matrix (X)
+    )
     V = np.array([0, 0])  # Gaussian influence diagram conditional variances
-    R = np.array([[0.01]])  # Measurement noise covariance matrix
+    R = np.array([0.01])  # Measurement noise covariance matrix
     H = np.array([[1, 0]])  # Measurement matrix
-    Phi = np.array([[1.0191, 0.0099],  # State transition matrix
-                    [-0.2474, 0.9994]])
+    Phi = np.array([[1.0191, 0.0099], [-0.2474, 0.9994]])  # State transition matrix
     gamma = np.array([[1, 0], [0, 1]])  # Process noise matrix
-    Qk = np.array([[0.002, 0.002],  # Process noise covariance matrix
-                   [0.002, 0.438]])
+    Qk = np.array([[0.002, 0.002], [0.002, 0.438]])  # Process noise covariance matrix
     Form = 1  # To convert the result back to covariance form
 
     # Run the Kalman filter
@@ -31,6 +33,7 @@ def test_kalman_filter():
 
     print("\nUpdated conditional variances (V):")
     print(V_updated)
+
 
 # Run the test
 if __name__ == "__main__":

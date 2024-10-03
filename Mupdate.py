@@ -1,6 +1,8 @@
 import numpy as np
 from COVtoINF import cov_to_inf
 from Evidence import evidence
+from INFtoCOV import inf_to_cov
+
 
 def mupdate(k, Z, u, B_or_sigma, V, R, H):
     """
@@ -42,8 +44,9 @@ def mupdate(k, Z, u, B_or_sigma, V, R, H):
     Opn = np.zeros((p, n))
     Opp = np.zeros((p, p))
 
-    # Form new B matrix for the update
-    B_new = np.block([[B, H.T], [Opn, Opp]])
+    B_new_top = np.hstack((B, H.T))
+    B_new_bottom = np.hstack((Opn, Opp))
+    B_new = np.vstack((B_new_top, B_new_bottom))
 
     # Perform Evidence update
     u, B, V = evidence(u_new, B_new, V_new, X1, n0, n1, n2, du)
@@ -54,3 +57,26 @@ def mupdate(k, Z, u, B_or_sigma, V, R, H):
     V = V[:n]
 
     return u, V, B
+
+# Example test case
+k = 0
+Z = np.array([[3], [4]])  # Measurement vector
+u = np.array([[1], [2]])  # Initial state vector
+B_or_sigma = np.array([[4, 1], [1, 9]])  # Covariance matrix
+V = np.array([[0], [0]])  # Conditional variances (influence diagram)
+R = np.array([[1, 0], [0, 4]])  # Measurement noise covariance matrix
+H = np.array([[0, 2], [3, 0]])  # Measurement matrix
+
+# Perform the measurement update
+u, V, B = mupdate(k, Z, u, B_or_sigma, V, R, H)
+
+# Convert influence diagram form back to covariance form
+n = u.shape  # Shape of the state vector
+X = inf_to_cov(V, B, n[0])
+
+# Display the results
+np.set_printoptions(precision=5)
+print("Updated State (u):")
+print(u)
+print("Updated Covariance Matrix (X):")
+print(X)

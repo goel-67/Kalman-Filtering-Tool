@@ -1,6 +1,7 @@
 import numpy as np
 from COVtoINF import cov_to_inf
 from Removal import removal
+from INFtoCOV import inf_to_cov
 
 def tupdate(u, B, V, Phi, gamma, Qk):
     """
@@ -35,7 +36,7 @@ def tupdate(u, B, V, Phi, gamma, Qk):
     Or1 = np.zeros((r, 1))
 
     # Create new V and B matrices for the update
-    V_new = np.concatenate([Vq, V, On1.flatten()])
+    V_new = np.concatenate((Vq.reshape(-1, 1), V.reshape(-1, 1), On1), axis=0)
     B_new = np.block([
         [Bq, Onr.T, gamma.T],
         [Onr, B, Phi.T],
@@ -59,3 +60,29 @@ def tupdate(u, B, V, Phi, gamma, Qk):
     u = u_new
 
     return u, B, V
+
+# Initial setup
+u = np.array([[0.0101], [0.1188]])
+X = np.array([[0.00516961, 0.008445032],
+              [0.008445032, 2.02692169]])
+Phi = np.array([[1.0191, 0.0099],
+                 [-0.2474, 0.9994]])
+gamma = np.array([[1, 0],
+                  [0, 1]])
+Qk = np.array([[0.002, 0.002],
+                [0.002, 0.438]])
+
+n = X.shape[0]
+
+# Function calls
+B, V, P = cov_to_inf(X, 2)
+u, B, V = tupdate(u, B, V, Phi, gamma, Qk)
+X = inf_to_cov(V, B, n)
+
+# Display the results with high precision
+np.set_printoptions(precision=10)
+print("Updated u:", u)
+print("B:", B)
+print("V:", V)
+print("X:", X)
+

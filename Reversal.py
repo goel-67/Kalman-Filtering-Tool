@@ -71,3 +71,36 @@ def reversal(B, V, n0, n1, n2, n3):
                     B[n0 + n1:j - 1, i - 1] -= B[j - 1, i - 1] * B[n0 + n1:j - 1, j - 1]
 
     return B, V
+
+# Test cases for the reversal function
+if __name__ == "__main__":
+    # Initial setup of inputs
+    n0 = 2
+    n1 = 2
+    n2 = 2
+    n3 = 0
+
+    # Vector V Test case
+    V = np.array([16.0, 1.0, 36.0, 49.0, 4.0, 25.0], dtype=float)
+    #V = np.array([16.0, 1.0, 36.0])
+
+    # Matrix B Test case
+    B = np.array([
+        [0, 0.5, -1.75, -0.125, 1, 0.5],
+        [0, 0, 5, 0.5, -1, 0.5],
+        [0, 0, 0, -0.5, 1, -0.5],
+        [0, 0, 0, 0, 1, 0.5],
+        [0, 0, 0, 0, 0, 0.5],
+        [0, 0, 0, 0, 0, 0]
+    ])
+
+    '''B = np.array([[0, 0.5, -1.75],
+                    [0, 0, 5.0],
+                    [0, 0, 0]])'''
+
+    # Function call
+    B, V = reversal(B, V, n0, n1, n2, n3)
+
+    # Display results
+    print("V:", V)
+    print("B:\n", B)

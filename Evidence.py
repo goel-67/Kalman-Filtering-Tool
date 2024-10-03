@@ -47,3 +47,25 @@ def evidence(u, B, V, X1, n0, n1, n2, du):
         B[n0 + j, :n0 + n1 + n2] = 0
 
     return u, B, V
+
+# Test setup
+n0 = 1
+n1 = 2
+n2 = 0
+
+# Input test cases
+u = np.array([0.0, 0.0, 0.0])
+du = u.copy()
+B = np.array([[0.0, 1.0, 0.5], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
+V = np.array([np.inf, 1.0, 1.0])
+X1 = np.array([80.0, 37.0])
+
+# Function call
+u, B, V = evidence(u, B, V, X1, n0, n1, n2, du)
+
+
+# Display final results
+print("\nFinal Results: ")
+print("u:", u)
+print("B:", B)
+print("V:", V)
