@@ -3,4 +3,4 @@ inftocov script works
 mupdate script works
 reversal script works
 evidence script works
-last value of V is off for removal
+removal script works
