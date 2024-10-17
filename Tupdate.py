@@ -27,6 +27,7 @@ def tupdate(u, B, V, Phi, gamma, Qk):
 
     # Convert process noise covariance matrix to influence diagram form
     Bq, Vq, _ = cov_to_inf(Qk, r)
+    #this part works
 
     # Prepare block matrices
     On = np.zeros((n, n))
@@ -42,13 +43,30 @@ def tupdate(u, B, V, Phi, gamma, Qk):
         [Onr, B, Phi.T],
         [Onr, On, On]
     ])
+    #this works
 
+
+    
     # Perform Removal operation to update B and V
     n0 = 0
     n1 = n + r
     n2 = n
     n3 = 0
+
+    '''print('mibomba')
+    print(B_new)
+    print(V_new)
+    print(n0)
+    print(n1)
+    print(n2)'''
+
+    #this part works
     B, V = removal(B_new, V_new, n0, n1, n2)
+
+    '''print('mibomba')
+    print(V)
+    print(B)'''
+
 
     # Update V and B for the current step
     V = V.flatten()  # Ensure V is a flat vector

@@ -4,3 +4,4 @@ mupdate script works
 reversal script works
 evidence script works
 removal script works
+something going wrong during the removal call in tupdate
