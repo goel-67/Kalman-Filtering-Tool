@@ -49,9 +49,9 @@ def tupdate(u, B, V, Phi, gamma, Qk):
     
     # Perform Removal operation to update B and V
     n0 = 0
-    n1 = n + r
-    n2 = n
-    n3 = 0
+    n1 = r
+    n2 = n+n
+    #n3 = 0
 
     '''print('mibomba')
     print(B_new)
@@ -61,11 +61,24 @@ def tupdate(u, B, V, Phi, gamma, Qk):
     print(n2)'''
 
     #this part works
-    B, V = removal(B_new, V_new, n0, n1, n2)
+    B_temp, V_temp = removal(B_new, V_new, n0, n1, n2)
 
-    '''print('mibomba')
+    print('mibomba')
+    print(V_temp)
+    print(B_temp)
+
+    n0 = r
+    n1 = n
+    n2 = n
+    print('hibomba')
+    print(r)
+    print(n)
+
+
+    B, V = removal(B_temp, V_temp, n0, n1, n2)
+    print('mibomba')
+    print(B)
     print(V)
-    print(B)'''
 
 
     # Update V and B for the current step
@@ -103,4 +116,3 @@ print("Updated u:", u)
 print("B:", B)
 print("V:", V)
 print("X:", X)
-
