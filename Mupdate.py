@@ -3,67 +3,89 @@ from COVtoINF import cov_to_inf
 from Evidence import evidence
 from INFtoCOV import inf_to_cov
 
-
 def mupdate(k, Z, u, B_or_sigma, V, R, H):
     """
-    Measurement update for measurement Z(k) in the Kalman filter.
-
-    Parameters:
-    k (int): Desired discrete time.
-    Z (numpy.ndarray): A p x 1 vector of measurement values at discrete time k.
-    u (numpy.ndarray): An n x 1 vector representing the mean of the state at discrete time k.
-    B_or_sigma (numpy.ndarray): If k = 0, the covariance matrix. If k ≠ 0, the Gaussian influence diagram arc coefficients.
-    V (numpy.ndarray): If k ≠ 0, a vector of Gaussian influence diagram conditional variances.
-    R (numpy.ndarray): The diagonal measurement noise covariance matrix R.
-    H (numpy.ndarray): The measurement matrix at discrete time k.
-
-    Returns:
-    u (numpy.ndarray): The updated mean vector of the state at discrete time k+1.
-    V (numpy.ndarray): The updated vector of conditional variances of the state at discrete time k+1.
-    B (numpy.ndarray): The updated matrix of Gaussian influence diagram arc coefficients at discrete time k+1.
+    Mupdate
+    Measurement update for measurement Z(k)
+    
+    Inputs:
+    k - desired discrete time
+    Z - p x 1 vector of measurement values at discrete time k
+    u - n x 1 vector that represents the mean of the state X(k) at discrete time k
+    B_or_sigma - If k == 0, n x n covariance matrix of state X(k) at discrete time k.
+                 If k != 0, n x n matrix of Gaussian influence diagram arc coefficients of state X(k).
+    V - If k != 0, n x 1 vector of Gaussian influence diagram conditional variances.
+        If k == 0, this input is ignored.
+    R - p x p diagonal measurement noise covariance matrix R
+    H - p x n measurement matrix at discrete time k
+    
+    Outputs:
+    u - updated n x 1 vector representing the mean of the state X(k+1)
+    V - updated n x 1 vector of Gaussian influence diagram conditional variances of state X(k+1)
+    B - updated n x n matrix of Gaussian influence diagram arc coefficients of state X(k+1)
     """
 
-    # Get dimensions
-    n = V.shape[0]
+    # Determine dimensions of V and Z
+    domain = V.shape[0]
+    n = domain
     p = Z.shape[0]
 
     if k == 0:
-        # Convert covariance matrix to influence diagram form
-        B, V, _ = cov_to_inf(B_or_sigma, n)
+        B, V, P = cov_to_inf(B_or_sigma, domain)
 
-    # Setup for Evidence update
-    X1 = Z.copy()  # Evidence vector
+    # Prepare intermediate values for update
+    X1 = np.array(Z).reshape(-1, 1)
     n0 = n
     n1 = p
     n2 = 0
+    u_new = np.vstack((u, H @ u))
+    #du = np.zeros((2, 1))
+    '''print('V\n', V)
+    print('R\n', R)'''
 
-    u_new = np.concatenate([u, H @ u])
-    du = np.zeros(n + p)
+    # Construct V_new to match MATLAB structure
+    V_new = np.vstack((V, np.diag(R).reshape(-1, 1)))
+    #print('V_new\n', V_new)
 
-    V_new = np.concatenate([V, np.diag(R)])
+    # Build the B_new matrix
     Opn = np.zeros((p, n))
     Opp = np.zeros((p, p))
+    B_new = np.block([[B, H.T], [Opn, Opp]])
 
-    B_new_top = np.hstack((B, H.T))
-    B_new_bottom = np.hstack((Opn, Opp))
-    B_new = np.vstack((B_new_top, B_new_bottom))
+    V_new = V_new.T
+    V_new = V_new.flatten()
+    u_new = u_new.T
+    u_new = u_new.flatten()
+    X1 = X1.T
+    X1 = X1.flatten()
+    du = u_new.copy()
 
-    # Perform Evidence update
+    '''print('V_new\n', V_new)
+    print('B_new\n', B_new)
+    print('u_new\n', u_new)
+    print('X1\n', X1)
+    print('n0\n', n0)
+    print('n1\n', n1)
+    print('n2\n', n2)
+    print('du\n', du)'''
+
+    # Update using Evidence function
     u, B, V = evidence(u_new, B_new, V_new, X1, n0, n1, n2, du)
 
-    # Extract the relevant parts for the updated state
+    # Return only the relevant portions
     u = u[:n]
     B = B[:n, :n]
     V = V[:n]
 
     return u, V, B
 
+
 # Example test case
 k = 0
 Z = np.array([[3], [4]])  # Measurement vector
 u = np.array([[1], [2]])  # Initial state vector
 B_or_sigma = np.array([[4, 1], [1, 9]])  # Covariance matrix
-V = np.array([[0], [0]])  # Conditional variances (influence diagram)
+V = np.array([[4.0], [8.75]])  # Conditional variances (influence diagram)
 R = np.array([[1, 0], [0, 4]])  # Measurement noise covariance matrix
 H = np.array([[0, 2], [3, 0]])  # Measurement matrix
 

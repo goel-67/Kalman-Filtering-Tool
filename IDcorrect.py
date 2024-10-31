@@ -2,6 +2,7 @@ import numpy as np
 from Mupdate import mupdate
 from INFtoCOV import inf_to_cov
 
+# Define the trackingKF class as previously provided
 class trackingKF:
     def __init__(self, F, H, state, state_covariance, process_noise):
         self.StateTransitionModel = F
@@ -10,65 +11,49 @@ class trackingKF:
         self.StateCovariance = state_covariance
         self.ProcessNoise = process_noise
 
-
+# Define the IDcorrect function as previously provided
 def id_correct(filter, zmeas, zcov):
-    """
-    Performs the measurement update process of the Kalman filter for object-oriented programming.
-
-    Parameters:
-    filter (object): A trackingKF object that contains State, StateCovariance, MeasurementModel, StateTransitionModel, and ProcessNoise.
-    zmeas (numpy.ndarray): Measurement value.
-    zcov (numpy.ndarray): Covariance of the measurement value.
-
-    Returns:
-    xcorr (numpy.ndarray): Corrected state of the measurement value.
-    Pcorr (numpy.ndarray): Corrected state of the covariance.
-    """
-
-    # Extract filter parameters
     u = filter.State
     P = filter.StateCovariance
     H = filter.MeasurementModel
     F = filter.StateTransitionModel
     Qk = filter.ProcessNoise
-    
-    M = Qk.shape[0]
-    Vzeros = np.zeros((M, 1))
-    I = np.eye(M)
+    M = Qk.shape
+    Vzeros = np.zeros((M[0], 1))
+    I = np.eye(M[0])
 
-    # Measurement update
+    # Perform measurement update
     u, V, B = mupdate(0, zmeas, u, P, Vzeros, zcov, H)
+    print("Corrected state (u):", u)
+    print("V:", V)
+    print("B:", B)
 
-    # Convert influence diagram back to covariance form
-    B = inf_to_cov(V, B, len(B))
+    # Get the shape of B and set up L
+    col_L, row_L = B.shape
+    L = col_L
+    B = inf_to_cov(V, B, L)
 
+    # Set corrected values
     xcorr = u
     Pcorr = B
 
     return xcorr, Pcorr
 
-# Test setup
-k = 0
+# Test parameters from Table 8
 zmeas = np.array([0.0101])
 u = np.array([[0.0101], [0.1188]])
-P = np.array([[0.01071225, 0.017495523],
-              [0.017495523, 2.04175521]])
-
-V = np.array([0, 0])
-zcov = np.array([0.01])
+P = np.array([[0.01071225, 0.017495523], [0.017495523, 2.04175521]])
+V = np.array([[0], [0]])
+zcov = np.array([[0.01]])
 H = np.array([[1, 0]])
-F = np.array([[1.0191, 0.0099],
-              [-0.2474, 0.9994]])
-Qk = np.array([[0.002, 0.002],
-               [0.002, 0.438]])
+F = np.array([[1.0191, 0.0099], [-0.2474, 0.9994]])
+Qk = np.array([[0.002, 0.002], [0.002, 0.438]])
 
-# Instantiate the Kalman filter
+# Initialize filter object
 filter = trackingKF(F, H, u, P, Qk)
 
-# Test the id_correct function
+# Run IDcorrect function
 xcorr, Pcorr = id_correct(filter, zmeas, zcov)
 
-# Display the results with high precision
-np.set_printoptions(precision=10)
-print("Corrected State (xcorr):", xcorr)
-print("Corrected Covariance (Pcorr):", Pcorr)
+print("Corrected state (xcorr):", xcorr)
+print("Corrected covariance (Pcorr):", Pcorr)
