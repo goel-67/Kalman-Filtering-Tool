@@ -4,4 +4,7 @@ mupdate script works
 reversal script works
 evidence script works
 removal script works
-something going wrong during the removal call in tupdate
+tupdate script works
+idpredict script works
+
+sigma is being displayed as B in the final kalman filter code

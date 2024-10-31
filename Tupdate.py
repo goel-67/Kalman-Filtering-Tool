@@ -74,9 +74,9 @@ def tupdate(u, B, V, Phi, gamma, Qk):
     print(r)
     print(n)
 
-
+    V_temp = V_temp.flatten()
     B, V = removal(B_temp, V_temp, n0, n1, n2)
-    print('mibomba')
+    print('dibomba')
     print(B)
     print(V)
 
@@ -116,3 +116,5 @@ print("Updated u:", u)
 print("B:", B)
 print("V:", V)
 print("X:", X)
+
+
