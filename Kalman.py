@@ -44,3 +44,30 @@ def kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form):
         B = inf_to_cov(V, B, domain)
 
     return u, B, V
+
+# Testing the Kalman filter function with MATLAB script values
+
+# Initial test values (based on the MATLAB script)
+k = 0
+Z = np.array([[0.0101]])  # Measurement values
+u = np.array([[0.0101], [0.1188]])  # Initial state mean vector
+X = np.array([[0.01071225, 0.017495523], [0.017495523, 2.04175521]])  # Covariance matrix
+V = np.array([[0], [0]])  # Conditional variances
+R = np.array([[0.01]])  # Measurement noise covariance matrix
+H = np.array([[1, 0]])  # Measurement matrix
+Phi = np.array([[1.0191, 0.0099], [-0.2474, 0.9994]])  # State transition matrix
+gamma = np.array([[1, 0], [0, 1]])  # Process noise matrix
+Qk = np.array([[0.002, 0.002], [0.002, 0.438]])  # Process noise covariance matrix
+Form = 1  # Output form, 1 for covariance form
+
+# Run the Kalman filter
+u_updated, B_updated, V_updated = kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form)
+
+# Display the results
+np.set_printoptions(precision=5)
+print("Updated State (u):")
+print(u_updated)
+print("Updated Covariance Matrix (B or X):")
+print(B_updated)
+print("Updated Conditional Variances (V):")
+print(V_updated)
