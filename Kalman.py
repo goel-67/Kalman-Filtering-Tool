@@ -48,7 +48,7 @@ def kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form):
 # Testing the Kalman filter function with MATLAB script values
 
 # Initial test values (based on the MATLAB script)
-k = 0
+'''k = 0
 Z = np.array([[0.0101]])  # Measurement values
 u = np.array([[0.0101], [0.1188]])  # Initial state mean vector
 X = np.array([[0.01071225, 0.017495523], [0.017495523, 2.04175521]])  # Covariance matrix
@@ -58,6 +58,43 @@ H = np.array([[1, 0]])  # Measurement matrix
 Phi = np.array([[1.0191, 0.0099], [-0.2474, 0.9994]])  # State transition matrix
 gamma = np.array([[1, 0], [0, 1]])  # Process noise matrix
 Qk = np.array([[0.002, 0.002], [0.002, 0.438]])  # Process noise covariance matrix
+Form = 1  # Output form, 1 for covariance form'''
+
+k = 0  # Initial time step
+Z = np.array([[502.55], [-0.9316]])  # Measurement values (p * 1)
+u = np.array([[400], [0], [0], [-300], [0], [0]])  # Initial state mean vector (n * 1)
+X = np.array([
+    [1125, 750, 250, 0, 0, 0],
+    [750, 1000, 500, 0, 0, 0],
+    [250, 500, 500, 0, 0, 0],
+    [0, 0, 0, 1125, 750, 250],
+    [0, 0, 0, 750, 1000, 500],
+    [0, 0, 0, 250, 500, 500]
+])  # Covariance matrix (n * n)
+V = np.array([[0], [0], [0], [0], [0], [0]])  # Conditional variances (n * 1)
+R = np.array([[25, 0], [0, 0.0087**2]])  # Measurement noise covariance matrix (p * p)
+H = np.array([
+    [0.8, 0, 0, -0.6, 0, 0],
+    [0.0012, 0, 0, 0.0016, 0, 0]
+])  # Measurement matrix (p * n)
+Phi = np.array([
+    [1, 1, 0.5, 0, 0, 0],
+    [0, 1, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 1, 1, 0.5],
+    [0, 0, 0, 0, 1, 1],
+    [0, 0, 0, 0, 0, 1]
+])  # State transition matrix (n * n)
+gamma = np.eye(6)  # Process noise matrix (n * n)
+Qk = np.array([
+    [0.25, 0.5, 0.5, 0, 0, 0],
+    [0.5, 1, 1, 0, 0, 0],
+    [0.5, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0.25, 0.5, 0.5],
+    [0, 0, 0, 0.5, 1, 1],
+    [0, 0, 0, 0.5, 1, 1]
+])  # Process noise covariance matrix (n * n)
+
 Form = 1  # Output form, 1 for covariance form
 
 # Run the Kalman filter
