@@ -48,7 +48,7 @@ def kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form):
 # Testing the Kalman filter function with MATLAB script values
 
 # Initial test values (based on the MATLAB script)
-'''k = 0
+k = 0
 Z = np.array([[0.0101]])  # Measurement values
 u = np.array([[0.0101], [0.1188]])  # Initial state mean vector
 X = np.array([[0.01071225, 0.017495523], [0.017495523, 2.04175521]])  # Covariance matrix
@@ -58,9 +58,9 @@ H = np.array([[1, 0]])  # Measurement matrix
 Phi = np.array([[1.0191, 0.0099], [-0.2474, 0.9994]])  # State transition matrix
 gamma = np.array([[1, 0], [0, 1]])  # Process noise matrix
 Qk = np.array([[0.002, 0.002], [0.002, 0.438]])  # Process noise covariance matrix
-Form = 1  # Output form, 1 for covariance form'''
+Form = 1  # Output form, 1 for covariance form
 
-k = 0  # Initial time step
+'''k = 0  # Initial time step
 Z = np.array([[502.55], [-0.9316]])  # Measurement values (p * 1)
 u = np.array([[400], [0], [0], [-300], [0], [0]])  # Initial state mean vector (n * 1)
 X = np.array([
@@ -95,7 +95,9 @@ Qk = np.array([
     [0, 0, 0, 0.5, 1, 1]
 ])  # Process noise covariance matrix (n * n)
 
-Form = 1  # Output form, 1 for covariance form
+Qk = Qk * 0.2**2
+
+Form = 1  # Output form, 1 for covariance form'''
 
 # Run the Kalman filter
 u_updated, B_updated, V_updated = kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form)
