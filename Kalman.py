@@ -3,7 +3,7 @@ from Mupdate import mupdate
 from Tupdate import tupdate
 from INFtoCOV import inf_to_cov
 
-def kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form):
+def kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form, h=None):
     """
     Apply Kalman filter at time k.
 
@@ -31,7 +31,7 @@ def kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form):
     p = Z.shape[0]
     
     # Perform measurement update
-    u, V, B = mupdate(k, Z, u, X, V, R, H)
+    u, V, B = mupdate(k, Z, u, X, V, R, H, h)
     u_new = u[:domain]
     V_new = V[:domain]
     B_new = B[:domain, :domain]
@@ -48,7 +48,7 @@ def kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form):
 # Testing the Kalman filter function with MATLAB script values
 
 # Initial test values (based on the MATLAB script)
-k = 0
+'''k = 0
 Z = np.array([[0.0101]])  # Measurement values
 u = np.array([[0.0101], [0.1188]])  # Initial state mean vector
 X = np.array([[0.01071225, 0.017495523], [0.017495523, 2.04175521]])  # Covariance matrix
@@ -60,7 +60,8 @@ gamma = np.array([[1, 0], [0, 1]])  # Process noise matrix
 Qk = np.array([[0.002, 0.002], [0.002, 0.438]])  # Process noise covariance matrix
 Form = 1  # Output form, 1 for covariance form
 
-'''k = 0  # Initial time step
+'''
+k = 0  # Initial time step
 Z = np.array([[502.55], [-0.9316]])  # Measurement values (p * 1)
 u = np.array([[400], [0], [0], [-300], [0], [0]])  # Initial state mean vector (n * 1)
 X = np.array([
@@ -98,9 +99,9 @@ Qk = np.array([
 Qk = Qk * 0.2**2
 
 Form = 1  # Output form, 1 for covariance form'''
-
+h = np.array([[500],[-0.644]])
 # Run the Kalman filter
-u_updated, B_updated, V_updated = kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form)
+u_updated, B_updated, V_updated = kalman(k, Z, u, X, V, R, H, Phi, gamma, Qk, Form, h)
 
 # Display the results
 np.set_printoptions(precision=5)
